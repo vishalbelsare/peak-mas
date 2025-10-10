@@ -2,10 +2,14 @@ import asyncio
 from abc import ABCMeta as _ABCMeta
 from typing import Dict, List, Optional
 
+from logging import getLogger
+
 import aioxmpp as _aioxmpp
 import spade as _spade
 from aioxmpp import JID
 from aioxmpp.callbacks import first_signal
+
+_logger = getLogger(__name__)
 
 
 class Agent(_spade.agent.Agent):
@@ -95,13 +99,13 @@ class _BehaviourMixin:
             try:
                 await first_signal(room.on_enter, room.on_failure)
                 self.agent.communities[jid] = room
-                self._logger.debug(f"Joined community: {jid}")
+                _logger.debug(f"Joined community: {jid}")
             except Exception as error:
-                self._logger.exception(
+                _logger.exception(
                     f"Couldn't join community (reason: {error}):  {jid}"
                 )
         else:
-            self._logger.debug(f"Already joined this community: {jid}")
+            _logger.debug(f"Already joined this community: {jid}")
 
     async def leave_community(self, jid: str):
         """Leaves a community.
@@ -112,7 +116,7 @@ class _BehaviourMixin:
         room = self.agent.communities.pop(jid, None)
         if room:
             await room.leave()
-            self._logger.debug(f"Left community: {jid}")
+            _logger.debug(f"Left community: {jid}")
 
     async def list_communities(self, node_jid: str):
         """Retrieves the list of the existing community in the server.
@@ -163,12 +167,12 @@ class _BehaviourMixin:
             msg: The XMPP message.
         """
         raw_msg = msg.prepare()
-        self._logger.debug(f"Sending message: {msg}")
+        _logger.debug(f"Sending message: {msg}")
         group = str(msg.to)
         try:
             await self.agent.communities[group].send_message(raw_msg)
         except:
-            self._logger.debug(
+            _logger.debug(
                 f"Sending a message to a group which the agent is not a member of: {group}"
             )
             await self.join_community(group)
@@ -189,7 +193,7 @@ class _BehaviourMixin:
             behaviour: SPADE's behaviour.
             tempalte: SPADE's template.
         """
-        self._logger.debug(f"Waiting for behaviour: {behaviour}")
+        _logger.debug(f"Waiting for behaviour: {behaviour}")
         if not behaviour.is_running:
             self.agent.add_behaviour(behaviour, template)
         await behaviour.join()
