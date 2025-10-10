@@ -206,6 +206,7 @@ class PeriodicBehaviour(
 ):
     """This behaviour is executed periodically with an interval."""
 
+
 class TimeoutBehaviour(
     _BehaviourMixin, _spade.behaviour.TimeoutBehaviour, metaclass=_ABCMeta
 ):
@@ -222,7 +223,6 @@ class FSMBehaviour(_BehaviourMixin, _spade.behaviour.FSMBehaviour, metaclass=_AB
     """A behaviour composed of states (oneshotbehaviours) that may transition from one
     state to another."""
 
-class State(
-    _BehaviourMixin, _spade.behaviour.State, metaclass=_ABCMeta
-):
+
+class State(_BehaviourMixin, _spade.behaviour.State, metaclass=_ABCMeta):
     """A state of a FSMBehaviour."""
