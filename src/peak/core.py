@@ -2,12 +2,12 @@ import asyncio
 from abc import ABCMeta as _ABCMeta
 from typing import Dict, List, Optional
 
-from logging import getLogger
-
 import aioxmpp as _aioxmpp
 import spade as _spade
 from aioxmpp import JID
 from aioxmpp.callbacks import first_signal
+
+from peak.logging import getLogger
 
 _logger = getLogger(__name__)
 
@@ -101,9 +101,7 @@ class _BehaviourMixin:
                 self.agent.communities[jid] = room
                 _logger.debug(f"Joined community: {jid}")
             except Exception as error:
-                _logger.exception(
-                    f"Couldn't join community (reason: {error}):  {jid}"
-                )
+                _logger.exception(f"Couldn't join community (reason: {error}):  {jid}")
         else:
             _logger.debug(f"Already joined this community: {jid}")
 
